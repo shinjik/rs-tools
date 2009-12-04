@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+"""A tool to list currently available servers."""
+
+import sys
+import getopt
+
+from RackSpaceManager import RackSpaceManager
+from Exceptions import *
+
+if __name__ == "__main__":
+
+    manager = RackSpaceManager()
+
+    try:
+        servers = manager.ListServers(isDetail = True)
+    except RackSpaceException, e:
+        print e
+        sys.exit(2)
+
+    for server in servers:
+        print "%6s %12s %8s" % (server.id, server.name, server.state.status)
