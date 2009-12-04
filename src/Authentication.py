@@ -5,6 +5,8 @@ from Exceptions import RackSpaceException, RackSpaceAuthenticationFailedExceptio
 import urllib
 import urlparse
 from httplib  import HTTPSConnection, HTTPConnection, HTTPException
+import ConfigParser
+import os
 #from utils    import parse_url
 
 class Authentication:
