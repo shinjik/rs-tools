@@ -1,6 +1,6 @@
-from RackSpaceClient import RackSpaceClient
+from RackSpaceManager import RackSpaceManager
 
-client = RackSpaceClient(user = '', key = '')
-res = client.SendRequest('GET', '/servers', '', None)
-print res['code']
-print res['body']
+#client = RackSpaceClient(user = '', key = '')
+manager = RackSpaceManager()
+print manager.ListServers(isDetail = True)
+print manager.ListImages(isDetail = True)
