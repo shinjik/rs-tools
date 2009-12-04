@@ -10,7 +10,7 @@ class RackSpaceManager:
         else:
             method = "servers"
         servers = self.rsClient.SendRequest(rType = "GET", method = method, params = None )
-        return images
+        return servers
 
     def ListImages(self, isDetail = False):
         if isDetail:
