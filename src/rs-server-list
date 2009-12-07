@@ -19,4 +19,4 @@ if __name__ == "__main__":
         sys.exit(2)
 
     for server in servers:
-        print "%6s %12s %8s" % (server.id, server.name, server.state.status)
+        print "%6s %12s %8s %8s" % (server.id, server.name, server.state.status, server.state.progress)
