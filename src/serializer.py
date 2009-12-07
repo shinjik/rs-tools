@@ -11,11 +11,12 @@ def to_j(o):
         return s
 
 def from_j(s):
-    o = None
+    #o = None
     j = json.JSONDecoder()
     try:
         o = j.decode(s)
     except Exception, e:
+        print e
         raise e
     finally:
         return o
