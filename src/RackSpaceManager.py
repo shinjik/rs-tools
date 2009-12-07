@@ -28,6 +28,21 @@ class Server:
         # Server state
         self.state = State()
 
+class ServerImage:
+    def __init__(self):
+        self.id = ""
+        self.name = ""
+        self.status = ""
+        self.progress = 0
+        self.serverId = 0
+        self.created = ""
+        self.updated = ""
+
+def extractValueOrNone(key, inputDict):
+    if isinstance(inputDict, dict):
+        if key in inputDict.keys():
+            return inputDict[key]
+    return None
 
 
 class RackSpaceManager:
@@ -73,6 +88,18 @@ class RackSpaceManager:
         else:
             method = "/images"
         images = self.rsClient.SendRequest(rType = "GET", method = method, data = None, params = None )
-        return simplejson.loads(images['body'])
+        imageList = []
+        for img in simplejson.loads(images['body'])['images']:
+            image = ServerImage()
+            image.id = img['id']
+            image.name = img['name']
+            image.serverId = extractValueOrNone("serverId", img)
+            image.status = extractValueOrNone("status", img)
+            image.progress = extractValueOrNone("progress", img)
+            image.created = extractValueOrNone("created", img)
+            image.updated = extractValueOrNone("updated", img)
+            imageList.append(image)
+        return imageList
+
 
 
