@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+"""A tool to delete server."""
+
+import sys
+import getopt
+
+from RackSpaceManager import RackSpaceManager
+from Exceptions import *
+
+def usage():
+    print "Usage:\n%s -i serverId\n" % sys.argv[0]
+
+if __name__ == "__main__":
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "i:")
+    except getopt.GetoptError, err:
+        print str(err)
+        usage()
+        sys.exit(2)
+
+    try:
+        o = opts.pop()
+    except:
+        usage()
+        sys.exit(2)
+
+    serverId = {o[0] : o[1]}.get('-i', None)
+
+    manager = RackSpaceManager()
+    if serverId is None:
+        usage()
+        sys.exit(2)
+
+    try:
+        manager.DeleteServer(serverId)
+    except RackSpaceException, e:
+        print "Error: ", e
+        sys.exit(2)
+
+    print "Server deleted!"
+
