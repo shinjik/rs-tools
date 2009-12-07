@@ -141,7 +141,7 @@ class RackSpaceManager:
             response = self.rsClient.SendRequest(rType="DELETE", method = "/servers/"+serverId, data = None, params = None)
         except RackSpaceException:
             raise
-        if response["code"] != 202
+        if response["code"] != 202:
             # Something wrong
             raise RackSpaceException()
 

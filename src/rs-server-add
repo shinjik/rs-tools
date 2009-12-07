@@ -45,7 +45,7 @@ if __name__ == "__main__":
         print "Error: ", e
         sys.exit(2)
 
-    print "Server created:"
+    print "Server created!"
     print "id = %6s name = '%12s' status = %8s progress = %8s" % (server.id, server.name, server.state.status, server.state.progress)
     print "root password (do not forget to save!): %s" % server.rootPassword
 
