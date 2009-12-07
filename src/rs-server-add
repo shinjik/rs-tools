@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+
+"""A tool to create new server on cloud."""
+
+import sys
+import getopt
+
+from RackSpaceManager import RackSpaceManager
+from Exceptions import *
+
+def usage():
+    print "Usage:\n%s -n name -i imageId -f flavorId(config variant) [-d descr ]\n" % sys.argv[0]
+
+if __name__ == "__main__":
+    name = imageId = flavorId = description = None
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "n:i:f:d:")
+    except getopt.GetoptError, err:
+        print str(err)
+        sys.exit(2)
+
+    for o, a in opts:
+        if o == "-n":
+            name = a
+        elif o == "-i":
+            imageId = int(a)
+        elif o == "-f":
+            flavorId = int(a)
+        elif o == "-d":
+            description = a
+
+
+    manager = RackSpaceManager()
+    if (name and imageId and flavorId) is None:
+        usage()
+        sys.exit(2)
+
+    meta = None
+    if description is not None:
+        meta = {"description": description}
+    try:
+        server = manager.CreateServer(name = name, imageId = imageId, flavorId = flavorId, metadata = meta)
+    except RackSpaceException, e:
+        print "Error: ", e
+        sys.exit(2)
+
+    print "Server created:"
+    print "id = %6s name = '%12s' status = %8s progress = %8s" % (server.id, server.name, server.state.status, server.state.progress)
+    print "root password (do not forget to save!): %s" % server.rootPassword
+
