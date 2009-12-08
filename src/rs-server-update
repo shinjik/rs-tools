@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+
+"""Update existing server (change name and/or root password)."""
+
+import sys
+import getopt
+
+from RackSpaceManager import RackSpaceManager
+from Exceptions import *
+
+def usage():
+    print "Usage:\n%s -i serverId [-n name] [-p rootPwd]\n" % sys.argv[0]
+
+if __name__ == "__main__":
+    name = serverId = pwd = None
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "i:n:p:")
+    except getopt.GetoptError, err:
+        print str(err)
+        sys.exit(2)
+
+    for o, a in opts:
+        if o == "-n":
+            name = a
+        elif o == "-i":
+            serverId = a
+        elif o == "-p":
+            pwd = a
+
+    manager = RackSpaceManager()
+    if (serverId and (name or pwd)) is None:
+        usage()
+        sys.exit(2)
+
+    try:
+        manager.UpdateServer(serverId = serverId, name = name, password = pwd)
+    except RackSpaceException:
+        print "Error, cannot update server"
+        sys.exit(2)
+
+    print "Server updated."
+

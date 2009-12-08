@@ -5,7 +5,7 @@ from httplib  import HTTPSConnection, HTTPConnection, HTTPException
 
 
 class RackSpaceClient:
-    VALID_HTTP_METHODS = ('GET', 'POST', 'DELETE')
+    VALID_HTTP_METHODS = ('GET', 'POST', 'DELETE', 'PUT')
 
     # Authentication object
     auth = None
