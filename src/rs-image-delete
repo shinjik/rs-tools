@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+"""A tool to delete server image."""
+
+import sys
+import getopt
+
+from RackSpaceManager import RackSpaceManager
+from Exceptions import *
+
+def usage():
+    print "Usage:\n%s -i imageId\n" % sys.argv[0]
+
+if __name__ == "__main__":
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "i:")
+    except getopt.GetoptError, err:
+        print str(err)
+        usage()
+        sys.exit(2)
+
+    try:
+        o = opts.pop()
+    except:
+        usage()
+        sys.exit(2)
+
+    imageId = {o[0] : o[1]}.get('-i', None)
+
+    manager = RackSpaceManager()
+    if imageId is None:
+        usage()
+        sys.exit(2)
+
+    try:
+        manager.DeleteImage(imageId)
+    except RackSpaceException:
+        print "Error while image delete"
+        sys.exit(2)
+
+    print "Image was deleted."
+
