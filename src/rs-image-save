@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+"""A tool to create server image."""
+
+import sys
+import getopt
+
+from RackSpaceManager import RackSpaceManager
+from Exceptions import *
+
+def usage():
+    print "Usage:\n%s -n name -i serverId\n" % sys.argv[0]
+
+if __name__ == "__main__":
+    name = serverId = None
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "n:i:")
+    except getopt.GetoptError, err:
+        print str(err)
+        sys.exit(2)
+
+    for o, a in opts:
+        if o == "-n":
+            name = a
+        elif o == "-i":
+            serverId = int(a)
+
+    manager = RackSpaceManager()
+    if (name and serverId) is None:
+        usage()
+        sys.exit(2)
+
+    try:
+        image = manager.CreateImage(serverId = serverId, name = name)
+    except RackSpaceException:
+        print "Error, cannot save image"
+        sys.exit(2)
+
+    print "Server image saved."
+    print "id = %6s name = '%12s' serverId: %6s status = %8s progress = %8s" % (image.id, image.name, image.serverId, image.status, image.progress)
+
