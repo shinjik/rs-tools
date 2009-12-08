@@ -201,8 +201,15 @@ class RackSpaceManager:
         image = parseImage(simplejson.loads(response['body'])['image'])
         return image
 
-
-
+    def DeleteImage(self, imageId):
+        # Delete server image specified by id
+        try:
+            response = self.rsClient.SendRequest(rType="DELETE", method = "/images/"+imageId, data = None, params = None)
+        except RackSpaceException:
+            raise
+        if response["code"] != 204:
+            # Something wrong
+            raise RackSpaceException()
 
 
 
