@@ -145,5 +145,43 @@ class RackSpaceManager:
             # Something wrong
             raise RackSpaceException()
 
+    def UpdateServer(self, serverId, name = None, password = None):
+        # Changes server name and root password.
+        srv = {}
+        if name is not None:
+            srv["name"] = name
+        if password is not None:
+            srv["adminPass"] = password
+
+        request = simplejson.dumps({"server": srv})
+
+        try:
+            response = self.rsClient.SendRequest(rType="PUT", method = "/servers/" + serverId, data = request, params = None)
+        except RackSpaceException:
+            raise
+        if response["code"] != 204:
+            # Error
+            raise RackSpaceException()
+
+    def RebootServer(self, serverId, hardReboot = False):
+        # Reboot specified server
+        rtype = "SOFT"
+        if hardReboot:
+            rtype = "HARD"
+
+        req = {"reboot" : {"type": rtype}}
+        request = simplejson.dumps(req)
+
+        try:
+            response = self.rsClient.SendRequest(rType="POST", method = "/servers/" + serverId + "/action", data = request, params = None)
+        except RackSpaceException:
+            raise
+        if response["code"] != 202:
+            # Error
+            raise RackSpaceException()
+
+
+
+
 
 
