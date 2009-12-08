@@ -71,6 +71,19 @@ def parseServer(server, isDetail = False, isPassword = False):
             srv.rootPassword = server['adminPass']
     return srv
 
+def parseImage(img):
+    image = ServerImage()
+    image.id = img['id']
+    image.name = img['name']
+    image.serverId = extractValueOrNone("serverId", img)
+    image.status = extractValueOrNone("status", img)
+    image.progress = extractValueOrNone("progress", img)
+    image.created = extractValueOrNone("created", img)
+    image.updated = extractValueOrNone("updated", img)
+    return image
+
+
+
 
 class RackSpaceManager:
 # TODO: add exception handling
@@ -99,14 +112,7 @@ class RackSpaceManager:
         images = self.rsClient.SendRequest(rType = "GET", method = method, data = None, params = None)
         imageList = []
         for img in simplejson.loads(images['body'])['images']:
-            image = ServerImage()
-            image.id = img['id']
-            image.name = img['name']
-            image.serverId = extractValueOrNone("serverId", img)
-            image.status = extractValueOrNone("status", img)
-            image.progress = extractValueOrNone("progress", img)
-            image.created = extractValueOrNone("created", img)
-            image.updated = extractValueOrNone("updated", img)
+            image = parseImage(img)
             imageList.append(image)
         return imageList
 
@@ -179,6 +185,21 @@ class RackSpaceManager:
         if response["code"] != 202:
             # Error
             raise RackSpaceException()
+
+    def CreateImage(self, serverId, name):
+        # Create custom image from specified server
+        req = {"image" : {"serverId": serverId, "name": name}}
+        request = simplejson.dumps(req)
+
+        try:
+            response = self.rsClient.SendRequest(rType="POST", method = "/images", data = request, params = None)
+        except RackSpaceException:
+            raise
+        if response["code"] != 202:
+            # Error
+            raise RackSpaceException()
+        image = parseImage(simplejson.loads(response['body'])['image'])
+        return image
 
 
 
