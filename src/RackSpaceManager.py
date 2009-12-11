@@ -186,6 +186,19 @@ class RackSpaceManager:
             # Error
             raise RackSpaceException()
 
+    def RebuildServer(self, serverId, imageId);
+        # Rebuild server with specified image
+        req = {"rebuild" : {"imageId": imageId}}
+        request = simplejson.dumps(req)
+
+        try:
+            response = self.rsClient.SendRequest(rType="POST", method = "/servers/" + serverId + "/action", data = request, params = None)
+        except RackSpaceException:
+            raise
+        if response["code"] != 202:
+            # Error
+            raise RackSpaceException()
+
     def CreateImage(self, serverId, name):
         # Create custom image from specified server
         req = {"image" : {"serverId": serverId, "name": name}}

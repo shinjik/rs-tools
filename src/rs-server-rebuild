@@ -1,0 +1,41 @@
+#!/usr/bin/env python
+
+"""Rebuild server."""
+
+import sys
+import getopt
+
+from RackSpaceManager import RackSpaceManager
+from Exceptions import *
+
+def usage():
+    print "Usage:\n%s -s serverId -i imageId\n" % sys.argv[0]
+
+if __name__ == "__main__":
+    serverId = imageId = None
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "i:s:")
+    except getopt.GetoptError, err:
+        print str(err)
+        sys.exit(2)
+
+    for o, a in opts:
+        if o == "-i":
+            imageId = int(a)
+        elif o == "-i":
+            serverId = a
+
+    manager = RackSpaceManager()
+    if (serverId or imageId) is None:
+        usage()
+        sys.exit(2)
+
+    try:
+        manager.RebuildServer(serverId = serverId, imageId = imageId)
+    except RackSpaceException:
+        print "Error, cannot rebuild specified server"
+        sys.exit(2)
+
+    print "Success."
+
