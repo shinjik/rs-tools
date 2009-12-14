@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+"""A tool to list currently available server configuration choices."""
+
+import sys
+import getopt
+
+from RackSpaceManager import RackSpaceManager
+from Exceptions import *
+
+if __name__ == "__main__":
+
+    manager = RackSpaceManager()
+
+    try:
+        flavors = manager.ListFlavors(isDetail = True)
+    except RackSpaceException:
+        print "error while performing request"
+        sys.exit(2)
+
+    for cfg in flavors:
+        print "%6s %16s %8s %8s" % (cfg.id, cfg.name, cfg.ram, cfg.disk)

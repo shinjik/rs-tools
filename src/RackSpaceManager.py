@@ -42,6 +42,13 @@ class ServerImage:
         self.created = ""
         self.updated = ""
 
+class ConfigurationPreset:
+    def __init__(self):
+        self.id = ""
+        self.name = ""
+        self.ram = 0
+        self.disk = 0
+
 def extractValueOrNone(key, inputDict):
     if isinstance(inputDict, dict):
         return inputDict.get(key, None)
@@ -82,6 +89,13 @@ def parseImage(img):
     image.updated = extractValueOrNone("updated", img)
     return image
 
+def parseFlavor(flavor):
+    cfg = ConfigurationPreset()
+    cfg.id = extractValueOrNone("id", flavor)
+    cfg.name = extractValueOrNone("name", flavor)
+    cfg.ram = int(extractValueOrNone("ram", flavor))
+    cfg.disk = int(extractValueOrNone("disk", flavor))
+    return cfg
 
 
 
@@ -186,7 +200,7 @@ class RackSpaceManager:
             # Error
             raise RackSpaceException()
 
-    def RebuildServer(self, serverId, imageId);
+    def RebuildServer(self, serverId, imageId):
         # Rebuild server with specified image
         req = {"rebuild" : {"imageId": imageId}}
         request = simplejson.dumps(req)
@@ -223,6 +237,23 @@ class RackSpaceManager:
         if response["code"] != 204:
             # Something wrong
             raise RackSpaceException()
+
+    def ListFlavors(self, isDetail = False):
+        if isDetail:
+            method = "/flavors/detail"
+        else:
+            method = "/flavors"
+        try:
+            flavors = self.rsClient.SendRequest(rType = "GET", method = method, data = None, params = None)
+        except RackSpaceException:
+            raise
+        if not (flavors['code']==200 or flavors['code']==203):
+            raise RackSpaceException()
+        cfgList = []
+        for flavor in simplejson.loads(flavors['body'])['flavors']:
+            cfg = parseFlavor(flavor)
+            cfgList.append(cfg)
+        return cfgList
 
 
 
