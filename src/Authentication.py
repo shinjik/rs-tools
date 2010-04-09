@@ -38,7 +38,7 @@ class Authentication:
             config = ConfigParser.ConfigParser()
             config.read(os.path.expanduser("~/.rackspacerc"))
             if not config.has_section('account'):
-                print "No such account '%s' defined in config file!" % account
+                print "No such account defined in config file!"
                 sys.exit(1)
             self.api_user = config.get('account', 'username')
             self.api_key = config.get('account', 'secret')

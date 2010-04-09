@@ -5,7 +5,7 @@ except ImportError:
 
 setup(
         name = "rs-tools",
-        version = "0.0.1",
+        version = "0.0.2",
         author = "Sergey Plastinkin",
         author_email = "splastinkin@griddynamics.com",
         url="http://github.com/shinjik/rs-tools/tree",
