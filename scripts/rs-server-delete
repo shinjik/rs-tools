@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-"""A tool to delete server image."""
+"""A tool to delete server."""
 
 import sys
 import getopt
 
-from RackSpaceManager import RackSpaceManager
-from Exceptions import *
+from rstools.RackSpaceManager import RackSpaceManager
+from rstools.Exceptions import *
 
 def usage():
-    print "Usage:\n%s -i imageId\n" % sys.argv[0]
+    print "Usage:\n%s -i serverId\n" % sys.argv[0]
 
 if __name__ == "__main__":
     try:
@@ -25,18 +25,18 @@ if __name__ == "__main__":
         usage()
         sys.exit(2)
 
-    imageId = {o[0] : o[1]}.get('-i', None)
+    serverId = {o[0] : o[1]}.get('-i', None)
 
     manager = RackSpaceManager()
-    if imageId is None:
+    if serverId is None:
         usage()
         sys.exit(2)
 
     try:
-        manager.DeleteImage(imageId)
-    except RackSpaceException:
-        print "Error while image delete"
+        manager.DeleteServer(serverId)
+    except RackSpaceException, e:
+        print "Error: ", e
         sys.exit(2)
 
-    print "Image was deleted."
+    print "Server deleted!"
 
